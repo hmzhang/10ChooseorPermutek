@@ -68,7 +68,47 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30sp"
+        android:orientation = "horizontal"
+        android:gravity = "center">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text = "Please enter your K-value below. ie. 10 Choose K" />
+    <EditText
+        android:layout_width="30sp"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:text=""
+        android:id="@+id/kvalue"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5sp"
+        android:orientation="horizontal"
+        android:gravity="center">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text = "Combination?"/>
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/choosebox"
+            android:onClick="checkedcheckbox"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text = "Permutation?"/>
+        <CheckBox
+            android:layout_width = "wrap_content"
+            android:layout_height = "wrap_content"
+            android:id="@+id/permutebox"
+            android:onClick="checkedcheckbox"/></LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15sp"
         android:orientation="horizontal">
         <Button
         android:layout_width="175sp"

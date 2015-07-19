@@ -8,8 +8,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import org.paukov.combinatorics.Factory;
 import org.paukov.combinatorics.Generator;
@@ -19,19 +21,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends Activity {
-    private Button button, deleteall;
-    private EditText e1, e2, e3, e4, e5,e6, e7,e8,e9,e10;
+    private Button submitbutton, deleteall;
+    private EditText e1, e2, e3, e4, e5,e6, e7,e8,e9,e10, kvalue;
     private ListView list;
     private int[] lastnumbersarray;
     //private String[] combinations;
     private List<String> combinations;
     private ArrayAdapter<String> ArrayAdapter;
-
+    private CheckBox permute,combine;
+    private boolean isPermute;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        button = (Button)findViewById(R.id.button);
+        isPermute = false;
+        submitbutton = (Button)findViewById(R.id.button);
         e1 = (EditText) findViewById(R.id.edit1);
         e2 = (EditText) findViewById(R.id.edit2);
         e3 = (EditText) findViewById(R.id.edit3);
@@ -42,13 +46,16 @@ public class MainActivity extends Activity {
         e8 = (EditText) findViewById(R.id.edit8);
         e9 = (EditText) findViewById(R.id.edit9);
         e10 = (EditText) findViewById(R.id.edit10);
+        kvalue = (EditText) findViewById(R.id.kvalue);
         list = (ListView) findViewById(R.id.list);
         deleteall=(Button) findViewById(R.id.deleteall);
+        combine = (CheckBox) findViewById(R.id.choosebox);
+        permute = (CheckBox) findViewById(R.id.permutebox);
 
         combinations = new ArrayList<String>();
         ArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, combinations);
         list.setAdapter(ArrayAdapter);
-        button.setOnClickListener(new View.OnClickListener() {
+        submitbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ArrayAdapter.clear();
@@ -58,18 +65,26 @@ public class MainActivity extends Activity {
                 ICombinatoricsVector<String> initialVector = Factory.createVector(new String[]{e1.getText().toString(), e2.getText().toString(), e3.getText().toString(),
                         e4.getText().toString(), e5.getText().toString(), e6.getText().toString(), e7.getText().toString(), e8.getText().toString(), e9.getText().toString(), e10.getText().toString()});
                 // Create a simple combination generator to generate 3-combinations of the initial vector
-                Generator<String> gen = Factory.createSimpleCombinationGenerator(initialVector, 6);
-                for (ICombinatoricsVector<String> combination : gen) {
-                    x = combination.toString();
-                    start = x.indexOf("[") + 1;
-                    end = x.indexOf("]");
-                    combinations.add(Integer.toString(count) + ". " + x.substring(start, end));
-                    count++;
+                if(kvalue.getText().toString().matches("")){
+                    Toast.makeText(getApplicationContext(), "Please enter a k-value.", Toast.LENGTH_SHORT);
+                }else {
+                    Generator<String> gen;
+                    if(!isPermute) {
+                        gen = Factory.createSimpleCombinationGenerator(initialVector, Integer.valueOf(kvalue.getText().toString()));
+
+                    }
+                    else{
+                        gen=Factory.createPermutationWithRepetitionGenerator(initialVector, Integer.valueOf(kvalue.getText().toString()));
+                    }
+                    for (ICombinatoricsVector<String> combination : gen) {
+                        x = combination.toString();
+                        start = x.indexOf("[") + 1;
+                        end = x.indexOf("]");
+                        combinations.add(Integer.toString(count) + ". " + x.substring(start, end));
+                        count++;
+                    }
+                    ArrayAdapter.notifyDataSetChanged();
                 }
-                ArrayAdapter.notifyDataSetChanged();
-                /*getstringarray();
-                lastnumbersarray = getlastnumbers(editarray);
-                updatelist();*/
             }
         });
         deleteall.setOnClickListener(new View.OnClickListener() {
@@ -110,6 +125,22 @@ public class MainActivity extends Activity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void checkedcheckbox(View v){
+        switch(v.getId()){
+            case R.id.choosebox:
+                permute.setChecked(false);
+                isPermute=false;
+                break;
+            case R.id.permutebox:
+                combine.setChecked(false);
+                isPermute=true;
+                break;
+            default:
+                break;
+        }
+
     }
 
 }
